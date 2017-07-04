@@ -55,26 +55,32 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.1.0</version><!--$NO-MVN-MAN-VER$ -->
 			</plugin>
+
 			<plugin>
-				<groupId>io.fabric8</groupId>
+				<groupId>com.spotify</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.15.3</version>
+				<version>1.0.0</version>
 				<configuration>
-					<dockerHost>http://127.0.0.1:2375</dockerHost>
-					<verbose>true</verbose>
-					<images>
-						<image>
-							<name>${docker.image.prefix}/${project.artifactId}</name>
-							<build>
-								<dockerFile>Dockerfile</dockerFile>
-								<assembly>
-									<descriptorRef>artifact</descriptorRef>
-								</assembly>
-							</build>
-						</image>
-					</images>
+					<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+					<dockerDirectory>src/main/docker</dockerDirectory>
+					<imageTags>
+						<imageTag>${project.version}</imageTag>
+						<imageTag>latest</imageTag>
+					</imageTags>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.war</include>
+						</resource>
+					</resources>
 				</configuration>
 			</plugin>
+			<!-- <plugin> <groupId>io.fabric8</groupId> <artifactId>docker-maven-plugin</artifactId> 
+				<version>0.15.3</version> <configuration> <dockerHost>http://127.0.0.1:2375</dockerHost> 
+				<verbose>true</verbose> <images> <image> <name>${docker.image.prefix}/${project.artifactId}</name> 
+				<build> <dockerFile>Dockerfile</dockerFile> <assembly> <descriptorRef>artifact</descriptorRef> 
+				</assembly> </build> </image> </images> </configuration> </plugin> -->
 			<!-- <plugin> <groupId>com.spotify</groupId> <artifactId>docker-maven-plugin</artifactId> 
 				<version>1.0.0</version> <configuration> <imageName>${docker.image.prefix}/${project.artifactId}}</imageName> 
 				<dockerDirectory>src/main/docker</dockerDirectory> <dockerHost>http://172.17.0.1:2375</dockerHost> 
